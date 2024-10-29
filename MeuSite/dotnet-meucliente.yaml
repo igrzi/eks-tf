@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cliente-001
+  namespace: small-clients
+  labels:
+    small-clients: cliente-001
+spec:
+  replicas: 2  # Increase replicas to ensure availability across multiple nodes
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1            # One extra pod during the update
+      maxUnavailable: 0      # Ensure all pods remain available during updates
+  selector:
+    matchLabels:
+      small-clients: cliente-001
+  template:
+    metadata:
+      labels:
+        small-clients: cliente-001
+        admission.datadoghq.com/enabled: "true"
+        tags.datadoghq.com/env: "testing"
+        tags.datadoghq.com/service: "cliente-001"
+        tags.datadoghq.com/version: "v1.0.1"
+      annotations:
+        admission.datadoghq.com/dotnet-lib.version: "latest"
+    spec:
+      serviceAccountName: cliente-001  # IAM service account created earlier
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    small-clients: cliente-001
+                topologyKey: kubernetes.io/hostname  # Spread across nodes
+      containers:
+        - name: cliente-001
+          image: igrzi1/dotnet-to-k8s:meucliente
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: DD_AGENT_HOST
+              value: "datadog-cluster-agent"
+            - name: DD_ENV
+              value: "testing"
+            - name: DD_SERVICE
+              value: "cliente-001"
+            - name: DD_VERSION
+              value: "v1.0.1"
+            - name: DD_LOGS_INJECTION
+              value: "true"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            ############################## Need to configure the following parameters
+            initialDelaySeconds: 60
+            periodSeconds: 10          # Health check frequency
+            timeoutSeconds: 5           # Timeout for health check
+            failureThreshold: 3         # Fail after three unsuccessful attempts
+            successThreshold: 1         # Success on the first pass

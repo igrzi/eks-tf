@@ -1,0 +1,13 @@
+apiVersion: vpcresources.k8s.aws/v1beta1
+kind: SecurityGroupPolicy
+metadata:
+  name: test-sg-policy
+  namespace: cliente1
+spec:
+  serviceAccountSelector:
+    matchLabels: 
+      cliente: cliente1
+  securityGroups:
+    groupIds: 
+      # - sg-0bba1e0ea9e36f5c3
+      - sg-0614ffda5a4f0f574

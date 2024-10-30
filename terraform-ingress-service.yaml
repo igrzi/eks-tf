@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cliente-001-service
+  namespace: small-clients
+spec:
+  selector:
+    small-clients: cliente-001  # Matches the label in your Deployment
+  ports:
+    - protocol: TCP
+      port: 80                   # Port exposed by the Service
+      targetPort: 80             # Port on the Pod (the same as your containerPort)
+  type: ClusterIP                # This is the default type

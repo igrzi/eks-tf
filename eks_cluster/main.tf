@@ -22,10 +22,6 @@ module "eks" {
     eks-pod-identity-agent = {}
     kube-proxy             = {}
     vpc-cni                = {}
-    aws-load-balancer-controller = {
-      enabled = true
-      version = "v2.4.3"
-    }
   }
 
   vpc_id                   = var.vpc

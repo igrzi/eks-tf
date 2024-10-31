@@ -6,7 +6,7 @@ metadata:
   labels:
     small-clients: cliente-001
 spec:
-  replicas: 2  # Increase replicas to ensure availability across multiple nodes
+  replicas: 1  # Increase replicas to ensure availability across multiple nodes
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -57,7 +57,6 @@ spec:
             httpGet:
               path: /
               port: 80
-            ############################## Need to configure the following parameters
             initialDelaySeconds: 60
             periodSeconds: 10          # Health check frequency
             timeoutSeconds: 5           # Timeout for health check

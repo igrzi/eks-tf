@@ -32,6 +32,23 @@ module "eks" {
     "additional-policies-alb" = "arn:aws:iam::381492167245:policy/additional-policies-alb"
   }
 
+  node_security_group_additional_rules = [
+    {
+      description   = "Allow HTTP traffic on port 80 from 0.0.0.0/0"
+      from_port     = 80
+      to_port       = 80
+      protocol      = "tcp"
+      cidr_blocks   = ["0.0.0.0/0"]
+    },
+    {
+      description   = "Allow HTTPS traffic on port 443 from 0.0.0.0/0"
+      from_port     = 443
+      to_port       = 443
+      protocol      = "tcp"
+      cidr_blocks   = ["0.0.0.0/0"]
+    }
+  ]
+
   # EKS Managed Node Group(s)
   eks_managed_node_group_defaults = {
     instance_types = var.instance_types
@@ -42,7 +59,6 @@ module "eks" {
       # Starting on 1.30, AL2023 is the default AMI type for EKS managed node groups
       ami_type       = "AL2023_x86_64_STANDARD"
       instance_types = var.instance_types
-      
 
       min_size     = 1
       max_size     = 1

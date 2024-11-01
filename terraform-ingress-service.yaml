@@ -8,6 +8,6 @@ spec:
     small-clients: cliente-001  # Matches the label in your Deployment
   ports:
     - protocol: TCP
-      port: 80                   # Port exposed by the Service
+      port: 80                   # Port expo  sed by the Service
       targetPort: 80             # Port on the Pod (the same as your containerPort)
   type: ClusterIP                # This is the default type

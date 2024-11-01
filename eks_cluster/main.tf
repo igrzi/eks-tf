@@ -28,6 +28,10 @@ module "eks" {
   subnet_ids               = var.node_subnet_ids
   control_plane_subnet_ids = var.control_plane_subnet_ids
   
+  iam_role_additional_policies = {
+    "additional-policies-alb" = "arn:aws:iam::381492167245:policy/additional-policies-alb"
+  }
+
   # EKS Managed Node Group(s)
   eks_managed_node_group_defaults = {
     instance_types = var.instance_types
